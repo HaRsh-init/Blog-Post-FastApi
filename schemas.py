@@ -22,6 +22,11 @@ class postBase(BaseModel):
     title: str = Field(min_length=1, max_length=100)
     content: str = Field(min_length=1)
 
+class postUpdate(BaseModel):
+    #model_config = ConfigDict(from_attributes=True)
+    title: str | None = Field(default= None, min_length=1, max_length=100)
+    content: str | None = Field(default= None, min_length=1)
+
 class postCreate(postBase):
     user_id: int
 
