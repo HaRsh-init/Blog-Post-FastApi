@@ -33,6 +33,7 @@ templates = Jinja2Templates(directory="templates")
 @app.get("/", include_in_schema=False, name="home")
 @app.get("/posts", include_in_schema=False, name="posts")
 def home(request: Request, db: Annotated[Session, Depends(get_db)]):
+    
     result = db.execute(select(models.Post))
     posts = result.scalars().all()
     return templates.TemplateResponse(
@@ -44,6 +45,7 @@ def home(request: Request, db: Annotated[Session, Depends(get_db)]):
 
 @app.get("/posts/{post_id}", include_in_schema=False)
 def post_page(request: Request, post_id: int, db: Annotated[Session, Depends(get_db)]):
+    
     result = db.execute(select(models.Post).where(models.Post.id == post_id))
     post = result.scalars().first()
     if post:
@@ -54,6 +56,7 @@ def post_page(request: Request, post_id: int, db: Annotated[Session, Depends(get
             {"post": post, "title": title},
         )
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
+
 
 
 @app.get("/users/{user_id}/posts", include_in_schema=False, name="user_posts")
@@ -247,6 +250,7 @@ def update_post_full(
 ):
     result = db.execute(select(models.Post).where(models.Post.id == post_id))
     post = result.scalars().first()
+    
     if not post:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Post not found"
@@ -314,6 +318,7 @@ def general_http_exception_handler(request: Request, exception: StarletteHTTPExc
         if exception.detail
         else "An error occurred. Please check your request and try again."
     )
+    
     if request.url.path.startswith("/api"):
         return JSONResponse(
             status_code=exception.status_code,
@@ -345,6 +350,7 @@ def validation_exception_handler(request: Request, exception: RequestValidationE
             "status_code": status.HTTP_422_UNPROCESSABLE_CONTENT,
             "title": status.HTTP_422_UNPROCESSABLE_CONTENT,
             "message": "Invalid request. Please check your input and try again.",
-        },
+        }, 
         status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
     )
+
