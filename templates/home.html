@@ -37,8 +37,11 @@
   import { escapeHtml, formatDate } from '/static/js/utils.js';
 
   // Pagination state - initialized from server-rendered values
+  // @ts-ignore
   let currentOffset = {{ limit }};  // Start after server-rendered posts
+  // @ts-ignore
   const limit = {{ limit }};
+  // @ts-ignore
   let hasMore = {{ 'true' if has_more else 'false' }};
 
   const postsContainer = document.getElementById('postsContainer');
